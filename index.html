@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitanemin Başarı & Gelişim Rehberi ❤️</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Decor Elements -->
+    <div class="bg-gradient-glow blob-1"></div>
+    <div class="bg-gradient-glow blob-2"></div>
+
+    <!-- Header Section -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="heart-badge">
+                    <i class="fa-solid fa-heart beat-animation"></i>
+                </div>
+                <div>
+                    <h1>Bitanemin Başarı & Gelişim Portalı</h1>
+                    <p class="subtitle">Sen istersen her şeyi başarırsın, ben hep yanındayım! ✨</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="today-date-badge" id="headerDate">
+                    <i class="fa-regular fa-calendar-check"></i>
+                    <span id="currentDateText">-- -- ----</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs-wrapper">
+        <div class="nav-tabs-container">
+            <button class="nav-tab active" data-tab="ags">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>AGS Sınavı</span>
+            </button>
+            <button class="nav-tab" data-tab="ales">
+                <i class="fa-solid fa-brain"></i>
+                <span>ALES Sınavı</span>
+            </button>
+            <button class="nav-tab" data-tab="yds">
+                <i class="fa-solid fa-language"></i>
+                <span>YDS Sınavı</span>
+            </button>
+            <div class="tab-divider"></div>
+            <button class="nav-tab special-tab" data-tab="books">
+                <i class="fa-solid fa-book-open-reader"></i>
+                <span>📚 Kitap Okuma</span>
+            </button>
+            <button class="nav-tab special-tab" data-tab="courses">
+                <i class="fa-solid fa-laptop-code"></i>
+                <span>🎓 Online Kurslar</span>
+            </button>
+            <div class="tab-divider"></div>
+            <button class="nav-tab special-tab" data-tab="mistakes">
+                <i class="fa-solid fa-file-circle-xmark"></i>
+                <span>📝 Hatalı Sorular</span>
+            </button>
+            <button class="nav-tab special-tab" data-tab="heatmap">
+                <i class="fa-solid fa-calendar-days"></i>
+                <span>📅 Çalışma Takvimi</span>
+            </button>
+            <button class="nav-tab special-tab" data-tab="badges">
+                <i class="fa-solid fa-trophy"></i>
+                <span>🏆 Rozetler & Özet</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Top Widgets Bar: Pomodoro & Daily Goal -->
+    <section class="top-widgets-bar">
+        <div class="widgets-container">
+            <!-- POMODORO TIMER WIDGET CARD -->
+            <div class="widget-card pomodoro-card">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <i class="fa-solid fa-stopwatch pomo-pulse"></i>
+                        <span id="pomoModeText">🎯 Odaklanma Zamanı</span>
+                    </div>
+                    <button class="btn-icon-subtle" onclick="openModal('pomoSettingsModal')" title="Süre Ayarları">
+                        <i class="fa-solid fa-gear"></i>
+                    </button>
+                </div>
+                <div class="pomo-display-box">
+                    <div class="pomo-time" id="pomoDisplay">25:00</div>
+                    <div class="pomo-subtext" id="pomoSubtext">25 dk Çalışma / 5 dk Mola</div>
+                </div>
+                <div class="pomo-controls">
+                    <button class="btn btn-primary btn-sm" id="pomoStartBtn" onclick="togglePomodoro()">
+                        <i class="fa-solid fa-play"></i> Başlat
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="resetPomodoro()">
+                        <i class="fa-solid fa-rotate-left"></i> Sıfırla
+                    </button>
+                </div>
+            </div>
+
+            <!-- DAILY GOAL WIDGET CARD -->
+            <div class="widget-card goal-card">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <i class="fa-solid fa-bullseye" style="color: var(--primary-rose);"></i>
+                        <span>Günlük Hedef Sistemi</span>
+                    </div>
+                    <button class="btn-icon-subtle" onclick="openSetDailyGoalModal()" title="Hedefi Değiştir">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                </div>
+                <div class="goal-info-box">
+                    <div class="goal-progress-text">
+                        <span id="dailyGoalText">0 / 50 Soru (%0)</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="dailyGoalFill" style="width: 0%;"></div>
+                    </div>
+                    <div class="goal-subtext" id="dailyGoalSubtext">
+                        Çözülen Soru: <strong id="todaySolvedCount">0</strong> | Okunan Sayfa: <strong id="todayReadCount">0</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Container -->
+    <main class="main-container">
+
+        <!-- ================= EXAM TABS CONTAINER ================= -->
+        <div id="examTabsContainer">
+            <!-- Dynamic Exam View rendered by JS -->
+        </div>
+
+        <!-- ================= BOOK TRACKER TAB ================= -->
+        <div class="tab-content" id="tab-books" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-book-bookmark"></i> Okuduğum Kitaplar & Sayfa Günlüğü</h2>
+                <p>Her gün okuduğun sayfaları kaydet, hedeflerine adım adım ulaş!</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card pink-card">
+                    <div class="stat-icon"><i class="fa-solid fa-book"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="totalBooksCount">0</span>
+                        <span class="stat-label">Aktif Okunan Kitap</span>
+                    </div>
+                </div>
+                <div class="stat-card purple-card">
+                    <div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="totalPagesReadCount">0</span>
+                        <span class="stat-label">Toplam Okunan Sayfa</span>
+                    </div>
+                </div>
+                <div class="stat-card green-card">
+                    <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="finishedBooksCount">0</span>
+                        <span class="stat-label">Bitirilen Kitaplar</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button class="btn btn-primary" onclick="openAddReadingBookModal()">
+                    <i class="fa-solid fa-plus"></i> Yeni Kitap Ekle
+                </button>
+            </div>
+
+            <div class="books-grid" id="activeBooksList"></div>
+
+            <div class="finished-books-section">
+                <h3 class="section-subtitle"><i class="fa-solid fa-award"></i> Bitirdiğim Harika Kitaplar</h3>
+                <div class="finished-books-list" id="finishedBooksList"></div>
+            </div>
+        </div>
+
+        <!-- ================= ONLINE COURSE TRACKER TAB ================= -->
+        <div class="tab-content" id="tab-courses" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-laptop-file"></i> Katıldığım Online Kurslar & Sertifikalar</h2>
+                <p>Öğrendiğin her yeni bilgi seni hayallerine bir adım daha yaklaştırıyor!</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card blue-card">
+                    <div class="stat-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="activeCoursesCount">0</span>
+                        <span class="stat-label">Devam Eden Kurs</span>
+                    </div>
+                </div>
+                <div class="stat-card orange-card">
+                    <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="totalWatchTime">0 dk</span>
+                        <span class="stat-label">Toplam İzleme Süresi</span>
+                    </div>
+                </div>
+                <div class="stat-card gold-card">
+                    <div class="stat-icon"><i class="fa-solid fa-certificate"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="earnedCertificatesCount">0</span>
+                        <span class="stat-label">Kazanılan Sertifikalar</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button class="btn btn-primary" onclick="openAddCourseModal()">
+                    <i class="fa-solid fa-plus"></i> Yeni Kurs Ekle
+                </button>
+            </div>
+
+            <div class="courses-grid" id="activeCoursesList"></div>
+
+            <div class="completed-courses-section">
+                <h3 class="section-subtitle"><i class="fa-solid fa-ribbon"></i> Tamamlanan Kurslar & Sertifika Arşivi</h3>
+                <div class="certificates-grid" id="certificatesList"></div>
+            </div>
+        </div>
+
+        <!-- ================= MISTAKE NOTEBOOK TAB ================= -->
+        <div class="tab-content" id="tab-mistakes" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-file-circle-xmark"></i> Hatalı Soru Defteri & Analiz Paneli</h2>
+                <p>Sürekli hata yaptığın veya tekrar etmek istediğin soru ve konuları analiz et!</p>
+            </div>
+
+            <div class="action-bar" style="display: flex; gap: 12px; align-items: center; justify-content: space-between;">
+                <button class="btn btn-primary" onclick="openAddMistakeNoteModal()">
+                    <i class="fa-solid fa-plus"></i> Hatalı Soru Notu Ekle
+                </button>
+                <div class="filter-group">
+                    <label style="font-size: 0.85rem; color: var(--text-secondary);">Filtrele:</label>
+                    <select id="mistakeExamFilter" class="form-control" style="width: auto; display: inline-block;" onchange="renderMistakeNotebookTab()">
+                        <option value="all">Tüm Sınavlar</option>
+                        <option value="ags">AGS</option>
+                        <option value="ales">ALES</option>
+                        <option value="yds">YDS</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mistakes-grid" id="mistakeNotesList">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+
+        <!-- ================= WORK HEATMAP CALENDAR TAB ================= -->
+        <div class="tab-content" id="tab-heatmap" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-calendar-days"></i> Çalışma Takvimi & Isı Haritası (Heatmap)</h2>
+                <p>Hangi günlerde ne kadar yoğun çalıştığını GitHub tarzı renkli takvimde incele!</p>
+            </div>
+
+            <div class="glass-card" style="margin-bottom: 24px;">
+                <div class="heatmap-header">
+                    <h3>Son 30 Günlük Aktivite Yoğunluğu</h3>
+                    <div class="heatmap-legend">
+                        <span>Az</span>
+                        <div class="heatmap-cell level-0"></div>
+                        <div class="heatmap-cell level-1"></div>
+                        <div class="heatmap-cell level-2"></div>
+                        <div class="heatmap-cell level-3"></div>
+                        <div class="heatmap-cell level-4"></div>
+                        <span>Çok</span>
+                    </div>
+                </div>
+
+                <div class="heatmap-grid" id="heatmapCalendarGrid">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= BADGES & MONTHLY SUMMARY TAB ================= -->
+        <div class="tab-content" id="tab-badges" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-trophy"></i> Başarı Rozetleri & Aylık Özet Raporu</h2>
+                <p>Kazanılan kupaların, başarı rozetlerin ve aylık performans özetin!</p>
+            </div>
+
+            <!-- MONTHLY SUMMARY CARD -->
+            <div class="glass-card" style="margin-bottom: 32px; background: linear-gradient(135deg, rgba(30,41,59,0.9), rgba(112,94,207,0.15)); border-color: var(--border-highlight);">
+                <h3 style="margin-bottom: 16px; color: var(--primary-rose);"><i class="fa-solid fa-chart-simple"></i> Bu Ayın Performans Özeti (<span id="monthlySummaryMonthName">Bu Ay</span>)</h3>
+                <div class="stats-grid">
+                    <div class="stat-card pink-card">
+                        <div class="stat-icon"><i class="fa-solid fa-pen-nib"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="monthlyQuestionsSolved">0</span>
+                            <span class="stat-label">Bu Ay Çözülen Soru</span>
+                        </div>
+                    </div>
+                    <div class="stat-card purple-card">
+                        <div class="stat-icon"><i class="fa-solid fa-file-signature"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="monthlyDenemesCount">0</span>
+                            <span class="stat-label">Girilen Deneme</span>
+                        </div>
+                    </div>
+                    <div class="stat-card green-card">
+                        <div class="stat-icon"><i class="fa-solid fa-book-open"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="monthlyPagesRead">0</span>
+                            <span class="stat-label">Okunan Sayfa</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BADGES & TROPHIES GALLERY -->
+            <div class="section-subtitle"><i class="fa-solid fa-award"></i> Rozet & Kupa Koleksiyonu</div>
+            <div class="badges-grid" id="badgesGalleryGrid">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL DIALOGS -->
+
+    <!-- Edit Exam Dates Modal -->
+    <div class="modal" id="editExamDateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-calendar-pen"></i> Sınav Tarihlerini Düzenle</h3>
+                <button class="close-btn" onclick="closeModal('editExamDateModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editDateExamKey">
+                <div class="form-group">
+                    <label>Son Başvuru Tarihi & Saati:</label>
+                    <input type="datetime-local" id="editApplyDateInput" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Sınav Günü Tarihi & Saati:</label>
+                    <input type="datetime-local" id="editExamDateInput" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('editExamDateModal')">İptal</button>
+                <button class="btn btn-primary" onclick="saveEditedExamDates()">Tarihleri Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Set Daily Goal Modal -->
+    <div class="modal" id="setDailyGoalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-bullseye"></i> Günlük Hedef Belirle</h3>
+                <button class="close-btn" onclick="closeModal('setDailyGoalModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Günlük Hedeflenen Soru Sayısı:</label>
+                    <input type="number" id="goalQuestionCountInput" min="1" placeholder="Örn: 100" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('setDailyGoalModal')">İptal</button>
+                <button class="btn btn-primary" onclick="saveDailyGoal()">Hedefi Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Mistake Note Modal -->
+    <div class="modal" id="addMistakeNoteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-file-circle-plus"></i> Hatalı Soru / Konu Notu Ekle</h3>
+                <button class="close-btn" onclick="closeModal('addMistakeNoteModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>İlgili Sınav:</label>
+                    <select id="mistakeExamSelect" class="form-control">
+                        <option value="ags">AGS</option>
+                        <option value="ales">ALES</option>
+                        <option value="yds">YDS</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ders / Konu Başlığı:</label>
+                    <input type="text" id="mistakeSubjectInput" placeholder="Örn: Matematik - Problemler" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Hata / Not Açıklaması:</label>
+                    <textarea id="mistakeNoteInput" rows="3" placeholder="Soru kökündeki püf noktayı unuttum, dikkat et..." class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addMistakeNoteModal')">İptal</button>
+                <button class="btn btn-primary" onclick="saveMistakeNote()">Notu Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pomodoro Settings Modal -->
+    <div class="modal" id="pomoSettingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-sliders"></i> Pomodoro Süre Ayarları</h3>
+                <button class="close-btn" onclick="closeModal('pomoSettingsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Çalışma Süresi (Dakika):</label>
+                    <input type="number" id="pomoWorkMinsInput" min="1" max="120" value="25" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Mola Süresi (Dakika):</label>
+                    <input type="number" id="pomoBreakMinsInput" min="1" max="60" value="5" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('pomoSettingsModal')">İptal</button>
+                <button class="btn btn-primary" onclick="savePomodoroSettings()">Ayarları Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Topic Modal -->
+    <div class="modal" id="addTopicModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-plus-circle"></i> Yeni Konu Ekle</h3>
+                <button class="close-btn" onclick="closeModal('addTopicModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="topicExamKey">
+                <div class="form-group">
+                    <label>Kategori / Ders Seçin:</label>
+                    <input type="text" id="topicCategoryInput" placeholder="Örn: Tarih, Matematik, Dil Bilgisi..." class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Konu Adı:</label>
+                    <input type="text" id="topicNameInput" placeholder="Örn: İnkılap Tarihi Dönemi, Türev..." class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addTopicModal')">İptal</button>
+                <button class="btn btn-primary" onclick="saveNewTopic()">Konuyu Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Test Book Modal -->
+    <div class="modal" id="addTestBookModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-book-medical"></i> Yeni Test Kitabı Ekle</h3>
+                <button class="close-btn" onclick="closeModal('addTestBookModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="bookExamKey">
+                <div class="form-group">
+                    <label>Kitap Adı / Yayın Evi:</label>
+                    <input type="text" id="testBookNameInput" placeholder="Örn: Pegem ALES Soru Bankası" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Ders / Konu (Opsiyonel):</label>
+                    <input type="text" id="testBookSubjectInput" placeholder="Örn: Genel Yetenek Matematik" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addTestBookModal')">İptal</button>
+                <button class="btn btn-primary" onclick="saveNewTestBook()">Kitabı Ekle</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log Questions Modal -->
+    <div class="modal" id="logQuestionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-pen-to-square"></i> Soru Çözümü Kaydet</h3>
+                <button class="close-btn" onclick="closeModal('logQuestionModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="logBookId">
+                <input type="hidden" id="logExamKey">
+                <p id="logBookTitleName" class="modal-highlight-title">Kitap Adı</p>
+                <div class="form-group">
+                    <label>Bugün Çözülen Soru Sayısı:</label>
+                    <input type="number" id="solvedCountInput" min="1" placeholder="Örn: 50" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Tarih:</label>
+                    <input type="date" id="solvedDateInput" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('logQuestionModal')">İptal</button>
+                <button class="btn btn-primary" onclick="saveQuestionLog()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log Mock Exam (Deneme) Modal -->
+    <div class="modal" id="logDenemeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-chart-line"></i> Deneme Sonucu Ekle</h3>
+                <button class="close-btn" onclick="closeModal('logDenemeModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="denemeExamKey">
+                <div class="form-group">
+                    <label>Deneme Adı / Yayın:</label>
+                    <input type="text" id="denemeNameInput" placeholder="Örn: Yargı 3. Türkiye Geneli Deneme" class="form-control">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-4">
+                        <label>Doğru:</label>
+                        <input type="number" id="denemeCorrectInput" min="0" value="0" class="form-control">
+                    </div>
+                    <div class="form-group col-4">
+                        <label>Yanlış:</label>
+                        <input type="number" id="denemeWrongInput" min="0" value="0" class="form-control">
+                    </div>
+                    <div class="form-group col-4">
+                        <label>Boş:</label>
+                        <input type="number" id="denemeEmptyInput" min="0" value="0" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Tarih:</label>
+                    <input type="date" id="denemeDateInput" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('logDenemeModal')">İptal</button>
+                <button class="btn btn-primary" onclick="saveDenemeResult()">Sonucu Ekle & Sıralama Hesapla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Reading Book Modal -->
+    <div class="modal" id="addReadingBookModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-book"></i> Yeni Okuma Kitabı Ekle</h3>
+                <button class="close-btn" onclick="closeModal('addReadingBookModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Kitap Adı:</label>
+                    <input type="text" id="readBookTitle" placeholder="Örn: Şeker Portakalı" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Yazar:</label>
+                    <input type="text" id="readBookAuthor" placeholder="Örn: José Mauro de Vasconcelos" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Toplam Sayfa Sayısı:</label>
+                    <input type="number" id="readBookTotalPages" min="1" placeholder="Örn: 200" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addReadingBookModal')">İptal</button>
+                <button class="btn btn-primary" onclick="saveReadingBook()">Kitabı Ekle</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log Reading Pages Modal -->
+    <div class="modal" id="logReadingPageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-bookmark"></i> Okunan Sayfa Ekle</h3>
+                <button class="close-btn" onclick="closeModal('logReadingPageModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="logReadingBookId">
+                <p id="logReadingBookTitle" class="modal-highlight-title">Kitap Adı</p>
+                <div class="form-group">
+                    <label>Bugün Okuduğun Sayfa Sayısı:</label>
+                    <input type="number" id="pagesReadTodayInput" min="1" placeholder="Örn: 25" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('logReadingPageModal')">İptal</button>
+                <button class="btn btn-primary" onclick="savePagesRead()">Okumayı Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Online Course Modal -->
+    <div class="modal" id="addCourseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-laptop-code"></i> Yeni Online Kurs Ekle</h3>
+                <button class="close-btn" onclick="closeModal('addCourseModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Kurs Adı:</label>
+                    <input type="text" id="courseNameInput" placeholder="Örn: İngilizce Konuşma & Gramer Kursu" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Platform / Eğitmen:</label>
+                    <input type="text" id="coursePlatformInput" placeholder="Örn: Udemy, YouTube, Coursera..." class="form-control">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label>Toplam Ders / Bölüm:</label>
+                        <input type="number" id="courseTotalLessonsInput" min="1" placeholder="Örn: 40" class="form-control">
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Tahmini Süre (Dakika):</label>
+                        <input type="number" id="courseTotalTimeInput" min="1" placeholder="Örn: 600" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addCourseModal')">İptal</button>
+                <button class="btn btn-primary" onclick="saveOnlineCourse()">Kursu Ekle</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log Course Progress Modal -->
+    <div class="modal" id="logCourseProgressModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-play"></i> Ders İzleme İlerlemesi Gir</h3>
+                <button class="close-btn" onclick="closeModal('logCourseProgressModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="logCourseId">
+                <p id="logCourseTitle" class="modal-highlight-title">Kurs Adı</p>
+                <div class="form-group">
+                    <label>Bugün İzlenen Ders Sayısı:</label>
+                    <input type="number" id="lessonsWatchedInput" min="0" value="1" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Bugün İzlenen Süre (Dakika):</label>
+                    <input type="number" id="timeWatchedInput" min="0" placeholder="Örn: 45" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('logCourseProgressModal')">İptal</button>
+                <button class="btn btn-primary" onclick="saveCourseProgress()">İlerlemeyi Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration Certificate Modal -->
+    <div class="modal" id="certificateModal">
+        <div class="modal-content certificate-card">
+            <div class="certificate-border">
+                <div class="cert-crown"><i class="fa-solid fa-crown"></i></div>
+                <h2 class="cert-title">TEBRİKLER PRENSESİM! 👑🎉</h2>
+                <p class="cert-subtitle">Harika bir başarıya daha imza attın!</p>
+                <div class="cert-body">
+                    <p class="cert-text" id="certCourseName">Kurs Adı</p>
+                    <p class="cert-subtext">Online kursunu azimle ve başarıyla tamamlayarak Sertifika almaya hak kazandın!</p>
+                </div>
+                <div class="cert-heart-quote">
+                    <i class="fa-solid fa-quote-left"></i>
+                    <span>Seninle ne kadar gurur duysam az. Her adımında yanındayım, seni çok ama çok seviyorum!</span>
+                    <i class="fa-solid fa-quote-right"></i>
+                </div>
+                <button class="btn btn-gold" onclick="closeModal('certificateModal')">
+                    <i class="fa-solid fa-heart"></i> Harikasın Bitanem!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STICKY FOOTER: DAILY ROTATING LOVE & MOTIVATION NOTE -->
+    <footer class="love-footer">
+        <div class="love-footer-content">
+            <div class="love-icon-wrapper">
+                <i class="fa-solid fa-heart love-pulsing-heart"></i>
+            </div>
+            <div class="love-text-container">
+                <div class="love-header">Günün Sevgi & Motivasyon Notu ❤️</div>
+                <p class="love-message" id="dailyLoveNoteText">Yükleniyor...</p>
+            </div>
+            <button class="love-refresh-btn" onclick="nextLoveNote()" title="Başka bir sevgi notu oku ✨">
+                <i class="fa-solid fa-sparkles"></i> Sevgi Tazele
+            </button>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
