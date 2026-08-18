@@ -227,7 +227,62 @@ document.addEventListener('DOMContentLoaded', () => {
     renderDailyLoveNote();
     updateDailyGoalWidget();
     checkAndUnlockBadges();
+    startFloatingHearts();
 });
+
+// ==========================================================================
+// 💕 FLOATING HEARTS & SPARKLES BACKGROUND ANIMATION
+// ==========================================================================
+function startFloatingHearts() {
+    const container = document.getElementById('floatingHeartsContainer');
+    if (!container) return;
+
+    const symbols = ['💕', '🌸', '✨', '💖', '🌺', '💫', '🎀', '💗', '⭐', '🌷'];
+
+    function createHeart() {
+        const el = document.createElement('div');
+        const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+        el.textContent = symbol;
+
+        const size = Math.random() * 18 + 10;
+        const left = Math.random() * 100;
+        const duration = Math.random() * 14 + 10;
+        const delay = Math.random() * 6;
+        const opacity = Math.random() * 0.25 + 0.08;
+
+        el.style.cssText = `
+            position: absolute;
+            bottom: -60px;
+            left: ${left}%;
+            font-size: ${size}px;
+            opacity: 0;
+            animation: floatUp ${duration}s ease-in ${delay}s forwards;
+            pointer-events: none;
+            user-select: none;
+        `;
+        container.appendChild(el);
+        setTimeout(() => el.remove(), (duration + delay) * 1000);
+    }
+
+    // Inject keyframes
+    if (!document.getElementById('floatUpStyle')) {
+        const style = document.createElement('style');
+        style.id = 'floatUpStyle';
+        style.textContent = `
+            @keyframes floatUp {
+                0%   { transform: translateY(0) rotate(0deg) scale(0.6); opacity: 0; }
+                10%  { opacity: var(--float-opacity, 0.18); }
+                80%  { opacity: var(--float-opacity, 0.18); }
+                100% { transform: translateY(-110vh) rotate(360deg) scale(1.1); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Create hearts periodically
+    createHeart();
+    setInterval(createHeart, 1200);
+}
 
 // --- LOCAL STORAGE MANAGER ---
 function loadStateFromLocalStorage() {
